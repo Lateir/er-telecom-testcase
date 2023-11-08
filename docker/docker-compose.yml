@@ -37,6 +37,5 @@ services:
             - yii-mysql:db
 
 networks:
-    default:
-        external:
-            name: dev-network
+    dev-network:
+        external: true
