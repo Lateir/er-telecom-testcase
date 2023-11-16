@@ -9,11 +9,6 @@ const router = createRouter({
       name: 'Главная',
       component: EmployeesTable
     },
-    {
-      path: '/employee/:id',
-      name: 'Страница сотрудника',
-      component: () => import('../views/Employee.vue')
-    }
   ]
 })
 

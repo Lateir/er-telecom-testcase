@@ -14,7 +14,9 @@ class m231108_144536_create_posts_list_table extends Migration
     {
         $this->createTable('{{%posts_list}}', [
             'id' => $this->primaryKey(),
+            'name' => $this->string()->notNull(),
         ]);
+        $this->execute("ALTER TABLE `posts_list` MODIFY `name` VARCHAR(255) CHARSET utf8mb4");
     }
 
     /**

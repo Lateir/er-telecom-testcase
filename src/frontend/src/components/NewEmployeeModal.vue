@@ -1,49 +1,50 @@
 <script>
+import axios from "axios";
+
 export default {
   name: "NewEmployeeModal",
+  props: ['posts'],
   data() {
     return {
-      posts: [
-        {
-          id: 1,
-          name: 'Default',
-        },
-        {
-          id: 2,
-          name: 'Supervisor'
-        }
-      ],
       name: '',
-      secondName: '',
-      thirdName: '',
+      email: '',
+      phone: '',
       post: 1,
-      startDate: new Date().toISOString().slice(0,10),
-      file: null,
+      birthdayDate: '',
+      avatar: '',
 
       nameError: false,
-      secondNameError: false,
     }
   },
   methods: {
     async addEmployeeHandler() {
-      const data = {
-        name: this.name,
-        secondName: this.secondName,
-        thirdName: this.thirdName,
+      let data = {
+        full_name: this.name,
         post: this.post,
-        startDate: this.startDate,
-        photo: this.file
+        employment_date: new Date().toISOString().slice(0,10),
       }
-      console.log(data)
+      if (this.birthdayDate) {
+        data.birth_date = this.birthdayDate
+      }
+      if (this.avatar) {
+        data.avatar_url = this.avatar
+      }
+      if (this.email) {
+        data.email = this.email
+      }
+      if (this.phone) {
+        data.phone_number = this.phone.toString()
+      }
+      const result = await axios.post('/api/add-employee',data)
+      if (result.status === 200 && result.data.success) {
+        this.$emit('success')
+      }
     }
   },
   watch: {
     async name() {
       this.nameError = this.name === ''
     },
-    async secondName() {
-      this.secondNameError = this.secondName === ''
-    }
   }
 }
 </script>
@@ -61,30 +62,30 @@ export default {
         <div class="modal-body">
           <form>
             <div class="form-group">
-              <label for="name" class="col-form-label">Имя</label>
+              <label for="name" class="col-form-label">Фио</label>
               <input :class="{'is-invalid':nameError}" v-model="name" required type="text" class="form-control" id="name" placeholder="Необходимо">
-            </div>
-            <div class="form-group">
-              <label for="name" class="col-form-label">Фамилия</label>
-              <input :class="{'is-invalid':secondNameError}" v-model="secondName" required type="text" class="form-control" id="2nd-name" placeholder="Необходимо">
-            </div>
-            <div class="form-group">
-              <label for="3rd-name" class="col-form-label">Отчество (при наличии)</label>
-              <input v-model="thirdName" type="text" class="form-control" id="3rd-name">
             </div>
             <div class="form-group">
               <label for="post" class="col-form-label">Должность</label>
               <select v-model="post" class="form-control" name="post" id="post">
-                <option v-for="post in posts" :value="post.id">{{post.name}}</option>
+                <option v-for="(post, id) in posts" :value="id">{{post}}</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="startDate" class="col-form-label">Дата трудоустройства</label>
-              <input v-model="startDate" type="date" class="form-control" id="startDate">
+              <label for="email" class="col-form-label">E-Mail</label>
+              <input v-model="email" type="text" class="form-control" id="email">
             </div>
             <div class="form-group">
-              <label for="image" class="col-form-label">Фотография</label>
-              <input ref="file" @change="file = this.$refs.file.files[0]" required type="file" class="form-control" id="image">
+              <label for="phone" class="col-form-label">Номер телефона</label>
+              <input v-model="phone" type="number" class="form-control" id="phone">
+            </div>
+            <div class="form-group">
+              <label for="birthdayDate" class="col-form-label">Дата рождения</label>
+              <input v-model="birthdayDate" type="date" class="form-control" id="birthdayDate">
+            </div>
+            <div class="form-group">
+              <label for="image" class="col-form-label">Ссылка на фотографию</label>
+              <input v-model="avatar" type="text" class="form-control" id="image">
             </div>
           </form>
         </div>

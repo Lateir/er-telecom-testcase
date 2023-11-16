@@ -12,9 +12,12 @@ class m231108_151741_create_seed_posts_list_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%seed_posts_list}}', [
-            'id' => $this->primaryKey(),
-        ]);
+        $posts = ['специалист', 'эксперт', 'супервайзер', 'руководитель'];
+        foreach ($posts as $post) {
+            $this->insert('{{%posts_list}}', [
+                'name' => $post
+            ]);
+        }
     }
 
     /**
@@ -22,6 +25,5 @@ class m231108_151741_create_seed_posts_list_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%seed_posts_list}}');
     }
 }
